@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="零日清单 · 首夜"
-config/version="0.5.0"
+config/version="0.6.0"
 run/main_scene="res://scenes/first_night.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
