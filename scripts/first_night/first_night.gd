@@ -12,6 +12,11 @@ const DESCRIPTIONS := {&"blanket":"路上少淋 15 点雨，回屋再降 25 点�
 var run := NightRun.new()
 var street: NightStreet
 var sites := {}
+var captions := {}
+var building_shapes := {}
+var camera_hint: Label
+var prior_canvas := Transform2D.IDENTITY
+var last_pick_yaw := INF
 var shopping: Panel
 var report: Panel
 var budget_label: Label
@@ -33,7 +38,8 @@ var legacy_button: Button
 
 
 func _ready() -> void:
-	_walls = [Rect2(96,305,180,86),Rect2(503,225,108,66),Rect2(926,285,187,84),
+	prior_canvas = get_viewport().canvas_transform
+	_walls = [NightStreet.BUILDINGS[&"shelter"],NightStreet.BUILDINGS[&"booth"],NightStreet.BUILDINGS[&"pump"],
 		Rect2(654,320,116,88),Rect2(332,337,56,24),Rect2(767,405,56,24),
 		Rect2(1142,279,56,24),Rect2(0,0,1280,104),Rect2(0,633,1280,87)]
 	_gate_rect = Rect2(0,0,1,1)
@@ -54,8 +60,11 @@ func _ready() -> void:
 	window.texture = vp.get_texture()
 	window.size = Vector2(1280,720)
 	window.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	window.z_index = -20
-	add_child(window)
+	var backdrop := CanvasLayer.new()
+	backdrop.layer = -1
+	add_child(backdrop)
+	backdrop.add_child(window)
+	_sync_view(0.0)
 	effect_player = AudioStreamPlayer.new()
 	effect_player.volume_db = -13
 	add_child(effect_player)
@@ -67,18 +76,16 @@ func _populate_targets() -> void:
 		var site := FirstNightSite.new()
 		site.run = run
 		_add_target(key,TITLES[key],PLACES[key],MINT,28,1,site)
-		# Door facade and ground marker share a reachable work point outside the building.
-		var facade := CollisionShape2D.new()
-		var shape := RectangleShape2D.new()
-		shape.size = Vector2(51,63)
-		facade.shape = shape
-		facade.position = Vector2(0,-31)
-		site.add_child(facade)
+		var body_hit := CollisionShape2D.new()
+		var hull := ConvexPolygonShape2D.new()
+		body_hit.shape = hull
+		site.add_child(body_hit)
+		building_shapes[key] = hull
 		site.get_node("Visual").hide()
 		site.get_node("Shadow").hide()
 		for child in site.get_children():
 			if child is Label:
-				child.position.y = 11
+				captions[key] = child
 				child.add_theme_color_override("font_color",PAPER)
 				child.add_theme_color_override("font_outline_color",BG)
 				child.add_theme_constant_override("outline_size",4)
@@ -93,11 +100,45 @@ func _enable_world(enabled: bool) -> void:
 	for site: FirstNightSite in sites.values():
 		site.interaction_enabled = enabled
 		site.visible = enabled
+	for label: Label in captions.values():
+		label.visible = enabled
 
 
 func _process(delta: float) -> void:
 	if is_instance_valid(street):
-		street.sync(player,delta)
+		_sync_view(delta)
+
+
+func _sync_view(delta: float) -> void:
+	street.sync(player, delta)
+	get_viewport().canvas_transform = street.ground_transform
+	for key in captions:
+		var anchor: Vector2 = street.ground_transform * PLACES[key]
+		captions[key].position = anchor + Vector2(-70, 11)
+	# Extruded roof footprints change only with yaw, not zoom or player movement.
+	if last_pick_yaw != street.yaw:
+		for key in building_shapes:
+			_update_building_hit(key)
+		last_pick_yaw = street.yaw
+
+
+func _update_building_hit(key: StringName) -> void:
+	var rect: Rect2 = NightStreet.BUILDINGS[key]
+	var roof: float = NightStreet.HEIGHTS[key] + 0.21
+	var roof_screen := street.camera.unproject_position(NightStreet.ground(rect.position, roof))
+	var roof_offset := street.ground_transform.affine_inverse() * roof_screen - rect.position
+	var points := PackedVector2Array()
+	for corner in [rect.position, Vector2(rect.end.x, rect.position.y), rect.end, Vector2(rect.position.x, rect.end.y)]:
+		var local: Vector2 = corner - PLACES[key]
+		points.append(local)
+		points.append(local + roof_offset)
+	var hull := Geometry2D.convex_hull(points)
+	hull.resize(hull.size() - 1) # Geometry2D closes its polygon by repeating the first point.
+	building_shapes[key].points = hull
+
+
+func _exit_tree() -> void:
+	get_viewport().canvas_transform = prior_canvas
 
 
 func _draw() -> void:
@@ -163,6 +204,9 @@ func _button(parent: Node, rect: Rect2, words: String, callback: Callable, accen
 func _build_hud() -> void:
 	var hud := CanvasLayer.new()
 	add_child(hud)
+	for label: Label in captions.values():
+		label.reparent(hud, false)
+		label.hide()
 	var header := _panel(hud,Rect2(0,0,1280,91),BG)
 	phase_text = _label(header,Vector2(24,9),Vector2(230,25),"",14,MINT)
 	_label(header,Vector2(24,33),Vector2(250,46),"零日清单",31,PAPER)
@@ -195,8 +239,9 @@ func _build_hud() -> void:
 	night_controls.size = Vector2(372,62)
 	night_controls.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	footer.add_child(night_controls)
-	sense_button = _button(night_controls,Rect2(0,0,188,42),"Q 空间感知",_sense,true)
+	sense_button = _button(night_controls,Rect2(0,0,188,42),"F 空间感知",_sense,true)
 	drink_button = _button(night_controls,Rect2(201,0,168,42),"H 吃罐装粥",_drink)
+	camera_hint = _label(night_controls,Vector2(0,43),Vector2(370,28),"",14,DIM)
 	legacy_button = _button(footer,Rect2(1028,22,225,40),"试玩 v0.3 夜班急件",_legacy)
 	shopping = _panel(hud,Rect2(316,115,648,495),BG)
 	_label(shopping,Vector2(27,17),Vector2(390,30),"灾变预警   /   最后一班补给车",15,MINT)
@@ -237,6 +282,7 @@ func _begin() -> void:
 		return
 	run.begin_night()
 	street.night()
+	_sync_view(0.0)
 	_enable_world(true)
 	status_label.text = "雨还在下。街亭有遮挡，去泵房得穿过积水，也可以直接回屋。"
 	_ping(preload("res://art/first_night/switch.wav"))
@@ -281,13 +327,14 @@ func _refresh() -> void:
 			mission_text.text = "广播预警。你带着伤，赶上了最后一班补给车。"
 			status_label.text = "守夜时饥饿 ≥80、潮湿 ≥65、SAN ≤25，每项扣 20 生命。"
 		NightRun.Phase.NIGHT:
+			_update_camera_hint()
 			phase_text.text = "D 0    /    雨夜停电"
 			if run.route.is_empty():
 				mission_text.text = "搜刮一处：街亭近，泵房远。也可留守。" if not run.used_sense else "回声已显：街亭 1 燃料，泵房 1 ＋ 锁柜 2。"
 			else:
 				mission_text.text = "回西侧据点过夜。燃料 ×%d，可烘去 %d 点潮湿。" % [run.fuel,run.fuel*20]
 			sense_button.disabled = run.used_sense or not run.route.is_empty()
-			sense_button.text = "感知已使用" if run.used_sense else "Q 感知  ·  SAN −20"
+			sense_button.text = "感知已使用" if run.used_sense else "F 感知  ·  SAN −20"
 			drink_button.disabled = run.drinks_left <= 0
 			drink_button.text = "H 吃粥  ·  余 %d" % run.drinks_left
 		NightRun.Phase.REPORT:
@@ -323,11 +370,31 @@ func _legacy() -> void:
 	get_tree().change_scene_to_file.call_deferred("res://scenes/supply_run.tscn")
 
 
+func _update_camera_hint() -> void:
+	camera_hint.text = "Q / E 转视角　%s　·　滚轮缩放 %d%%" % [NightStreet.VIEW_NAMES[street.view_index], roundi(100 * NightStreet.ZOOM_STEPS[street.zoom_index])]
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if run.phase != NightRun.Phase.NIGHT or not event is InputEventMouseButton or not event.pressed:
+		return
+	match event.button_index:
+		MOUSE_BUTTON_WHEEL_UP: street.change_zoom(1)
+		MOUSE_BUTTON_WHEEL_DOWN: street.change_zoom(-1)
+		_: return
+	_update_camera_hint()
+	get_viewport().set_input_as_handled()
+
+
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not (event is InputEventKey and event.pressed and not event.echo):
 		return
 	match event.physical_keycode:
-		KEY_Q: _sense()
+		KEY_Q, KEY_E:
+			if run.phase != NightRun.Phase.NIGHT:
+				return
+			street.turn(-1 if event.physical_keycode == KEY_Q else 1)
+			_update_camera_hint()
+		KEY_F: _sense()
 		KEY_H: _drink()
 		KEY_R: _reset_scene()
 		_: return

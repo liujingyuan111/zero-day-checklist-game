@@ -3,6 +3,15 @@ extends Node3D
 
 const SCALE := 32.0
 const TILT := 0.83
+const MAP_CENTER := Vector2(640, 360)
+const VIEW_NAMES := ["南侧", "东侧", "北侧", "西侧"]
+const ZOOM_STEPS := [0.55, 0.7, 0.85, 1.0, 1.2, 1.45, 1.75]
+const BUILDINGS := {
+	&"shelter": Rect2(96,305,180,86),
+	&"booth": Rect2(503,225,108,66),
+	&"pump": Rect2(926,285,187,84)
+}
+const HEIGHTS := {&"shelter": 2.15, &"booth": 1.75, &"pump": 2.45}
 const GROUND := Color("#535d55")
 const ROAD := Color("#363e3f")
 var camera: Camera3D
@@ -13,6 +22,13 @@ var lamps: Array[OmniLight3D] = []
 var traces: Array[MeshInstance3D] = []
 var materials := {}
 var clock := 0.0
+var view_index := 0
+var zoom_index := 3
+var yaw := 0.0
+var target_yaw := 0.0
+var zoom_factor := 1.0
+var following := false
+var ground_transform := Transform2D.IDENTITY
 
 
 static func ground(at: Vector2, lift := 0.0) -> Vector3:
@@ -22,10 +38,8 @@ static func ground(at: Vector2, lift := 0.0) -> Vector3:
 func _ready() -> void:
 	camera = Camera3D.new()
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera.size = 720.0 / SCALE
-	camera.position = Vector3(0, sin(TILT),cos(TILT)) * 40.0
 	add_child(camera)
-	camera.look_at(Vector3.ZERO)
+	_place_camera(MAP_CENTER)
 	atmosphere = Environment.new()
 	atmosphere.background_mode = Environment.BG_COLOR
 	atmosphere.background_color = Color("#34444d")
@@ -41,17 +55,17 @@ func _ready() -> void:
 	daylight.light_energy = 1.15
 	daylight.shadow_enabled = true
 	add_child(daylight)
-	_box(Vector2(640,360),Vector2(1500,920),0.22,GROUND,-0.23)
-	_box(Vector2(640,498),Vector2(1450,110),0.03,ROAD,-0.01)
+	_box(Vector2(640,360),Vector2(6500,6500),0.22,GROUND,-0.23)
+	_box(Vector2(640,498),Vector2(6500,110),0.03,ROAD,-0.01)
 	for y in [441,554]:
-		_box(Vector2(640,y),Vector2(1450,8),0.12,Color("#a39e88"))
-	for x in range(-20,1350,83):
+		_box(Vector2(640,y),Vector2(6500,8),0.12,Color("#a39e88"))
+	for x in range(-2012,3400,83):
 		_box(Vector2(x,496),Vector2(36,3),0.02,Color("#b2a278"),0.025)
 	for x in range(382,488,19):
 		_box(Vector2(x,517),Vector2(11,57),0.02,Color("#b7b19a"),0.025)
-	_building(Rect2(96,305,180,86),2.15,Color("#777f70"),Color("#58665a"))
-	_building(Rect2(503,225,108,66),1.75,Color("#8c7762"),Color("#616e65"))
-	_building(Rect2(926,285,187,84),2.45,Color("#6d7c81"),Color("#465d65"))
+	_building(BUILDINGS[&"shelter"],HEIGHTS[&"shelter"],Color("#777f70"),Color("#58665a"))
+	_building(BUILDINGS[&"booth"],HEIGHTS[&"booth"],Color("#8c7762"),Color("#616e65"))
+	_building(BUILDINGS[&"pump"],HEIGHTS[&"pump"],Color("#6d7c81"),Color("#465d65"))
 	# Warm door frames, front windows and a roller shutter give each site a silhouette.
 	_front(Vector2(203,392),2.05,Color("#dcae73"))
 	_front(Vector2(557,292),1.45,Color("#d5ad6c"))
@@ -161,6 +175,7 @@ func _lamp(at: Vector2) -> void:
 
 
 func night() -> void:
+	following = true
 	daylight.light_color = Color("#a8bbd5")
 	daylight.light_energy = 0.8
 	atmosphere.ambient_light_color = Color("#9db0be")
@@ -180,12 +195,38 @@ func reveal() -> void:
 	add_child(glow)
 
 
+func turn(steps: int) -> void:
+	view_index = posmod(view_index + steps, VIEW_NAMES.size())
+	target_yaw += steps * PI * 0.5
+
+
+func change_zoom(steps: int) -> void:
+	zoom_index = clampi(zoom_index + steps, 0, ZOOM_STEPS.size() - 1)
+
+
+func _place_camera(focus: Vector2) -> void:
+	var pivot := ground(focus)
+	var arm := Vector3(sin(yaw) * cos(TILT), sin(TILT), cos(yaw) * cos(TILT))
+	camera.size = 720.0 / (SCALE * zoom_factor)
+	camera.position = pivot + arm * 40.0
+	camera.look_at(pivot)
+	# Three ground samples define the same affine map as the orthographic renderer.
+	var center := camera.unproject_position(ground(MAP_CENTER))
+	var dx := (camera.unproject_position(ground(MAP_CENTER + Vector2(100, 0))) - center) / 100.0
+	var dy := (camera.unproject_position(ground(MAP_CENTER + Vector2(0, 100))) - center) / 100.0
+	ground_transform = Transform2D(dx, dy, center - dx * MAP_CENTER.x - dy * MAP_CENTER.y)
+
+
 func sync(actor: PlayerController, delta: float) -> void:
 	if courier == null:
 		return
+	yaw = move_toward(yaw, target_yaw, TAU * delta)
+	zoom_factor = move_toward(zoom_factor, ZOOM_STEPS[zoom_index], 2.8 * delta)
+	_place_camera(actor.position if following else MAP_CENTER)
 	clock += delta
 	var moving := actor.velocity.length_squared() > 1.0
 	var bob := absf(sin(clock*12.0))*0.09 if moving else 0.0
 	courier.position = ground(actor.position,0.015+bob)
-	if absf(actor.velocity.x)>2.0:
-		courier.flip_h = actor.velocity.x<0.0
+	var screen_velocity := ground_transform.basis_xform(actor.velocity)
+	if absf(screen_velocity.x) > 2.0:
+		courier.flip_h = screen_velocity.x < 0.0
