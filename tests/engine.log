@@ -1,0 +1,41 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS I01 Remote chest approach and one-time loot
+PASS I02 Single request repeats chopping to completion
+PASS I03 Single request repeats attacks to completion
+PASS I04 Pickup commits once and invalidates target
+PASS I05 Cancellation before commit has no effect
+PASS I06 Cancellation after commit preserves effect and stops repeat
+PASS I07 Duplicate commit token cannot duplicate effects
+PASS I08 Stale token cannot commit a replacement action
+PASS I09 Replacing an action cancels its pending effect
+PASS I10 Cached action is rejected after equipment changes
+PASS I11 Equipment changes during approach invalidate work
+PASS I12 Equipment changes during windup prevent damage
+PASS I13 Near target behind wall is approached around wall
+PASS I14 Unreachable target fails without loot or endless walking
+PASS I15 Moving target is followed to its new location
+PASS I16 Target leaving windup range cannot be hit remotely
+PASS I17 Target deletion during approach terminates safely
+PASS I18 Target deletion during windup has no delayed reward
+PASS I19 Manual input interrupts buffered approach
+PASS I20 Right-click event cancels approach
+PASS I21 Overlapping pick targets follow visual depth and deletion
+PASS I22 Click movement respects clearance around a solid wall
+PASS I23 New blocking wall terminates an obsolete approach
+PASS I24 Stopped animation is bounded by watchdog
+PASS I25 Completion callback command takes precedence over repeat
+PASS I26 Inventory callback replacement keeps its own commit timing
+PASS I27 Reapproach callback replacement is not overwritten
+PASS M01 Hidden salvage, scan range, line of sight and cooldown
+PASS M02 Wreck body click approaches a separate working position and discovers salvage
+PASS M03 Missing materials, pre-commit interruption and material loss keep the bridge closed
+PASS M04 Repair is atomic and survives cancellation and signal reentry
+PASS M05 Playable main scene completes a round trip by navigating to each target
+PASS N01 Budget, stock limits, refunds and manifest lock
+PASS N02 Same loadout, single-use sense changes the chosen route
+PASS N03 Rain cover, fuel and a wet shelter change dawn health
+PASS N04 Default scene, door picking, navigation, cancel and settlement
+PASS N05 Eating at home changes the dawn outcome for a risky trip
+PASS N06 Survival limits and inclusive damage thresholds
+SUMMARY 38/38 passed; report: tests/latest_report.json

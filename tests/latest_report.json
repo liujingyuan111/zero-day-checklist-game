@@ -1,0 +1,883 @@
+{
+	"cases": [
+		{
+			"assertions": [
+				{
+					"description": "Clicking a distant chest awards nothing immediately",
+					"passed": true
+				},
+				{
+					"description": "Actor reaches and finishes opening chest within timeout",
+					"passed": true
+				},
+				{
+					"description": "Open commits from actual interaction range",
+					"passed": true
+				},
+				{
+					"description": "One open grants exactly two food",
+					"passed": true
+				},
+				{
+					"description": "Re-interaction does not award the chest contents again",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 44,
+			"id": "I01",
+			"name": "Remote chest approach and one-time loot",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "One request finishes all three chops",
+					"passed": true
+				},
+				{
+					"description": "Exactly three successful chop commits occur",
+					"passed": true
+				},
+				{
+					"description": "Felling grants exactly three wood",
+					"passed": true
+				},
+				{
+					"description": "Each repeated action has its own token",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 33,
+			"id": "I02",
+			"name": "Single request repeats chopping to completion",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "A single attack request continues until enemy defeat",
+					"passed": true
+				},
+				{
+					"description": "Two hits award one core shard, once",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 19,
+			"id": "I03",
+			"name": "Single request repeats attacks to completion",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Collected item is removed from scene",
+					"passed": true
+				},
+				{
+					"description": "Pickup grants exactly its configured amount once",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 19,
+			"id": "I04",
+			"name": "Pickup commits once and invalidates target",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Action reaches WINDUP before commit",
+					"passed": true
+				},
+				{
+					"description": "No inventory change at windup entry",
+					"passed": true
+				},
+				{
+					"description": "Cancelled animation never opens chest or grants loot",
+					"passed": true
+				},
+				{
+					"description": "No delayed commit or lingering navigation survives cancellation",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 17,
+			"id": "I05",
+			"name": "Cancellation before commit has no effect",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "First chop lands",
+					"passed": true
+				},
+				{
+					"description": "A landed hit is preserved and a second hit is not started",
+					"passed": true
+				},
+				{
+					"description": "No repeat damage or felling loot after recovery cancellation",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 31,
+			"id": "I06",
+			"name": "Cancellation after commit preserves effect and stops repeat",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Original animation commit lands",
+					"passed": true
+				},
+				{
+					"description": "Duplicate same-token callbacks have no second effect",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 8,
+			"id": "I07",
+			"name": "Duplicate commit token cannot duplicate effects",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Late old callback cannot execute replacement action",
+					"passed": true
+				},
+				{
+					"description": "Only current action's own animation earns loot",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 11,
+			"id": "I08",
+			"name": "Stale token cannot commit a replacement action",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Replaced chest action never commits",
+					"passed": true
+				},
+				{
+					"description": "Replacement pickup finishes normally",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 14,
+			"id": "I09",
+			"name": "Replacing an action cancels its pending effect",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Initial axe resolves to chop",
+					"passed": true
+				},
+				{
+					"description": "Stale cached chop cannot bypass equipment requirements",
+					"passed": true
+				},
+				{
+					"description": "Invalid action ends without a commit",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 17,
+			"id": "I10",
+			"name": "Cached action is rejected after equipment changes",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Unequipping en route prevents the pending chop",
+					"passed": true
+				},
+				{
+					"description": "Invalid work does not leave the actor walking forever",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 17,
+			"id": "I11",
+			"name": "Equipment changes during approach invalidate work",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Unequipping during windup invalidates the strike before its event",
+					"passed": true
+				},
+				{
+					"description": "Invalidated strike reaches a terminal state",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 20,
+			"id": "I12",
+			"name": "Equipment changes during windup prevent damage",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Fixture starts close but separated by solid wall",
+					"passed": true
+				},
+				{
+					"description": "Being within nominal range does not permit opening through wall",
+					"passed": true
+				},
+				{
+					"description": "Actor can still go around wall and open the chest",
+					"passed": true
+				},
+				{
+					"description": "Effect commits only from unobstructed position",
+					"passed": true
+				},
+				{
+					"description": "Occlusion correction never duplicates loot",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 30,
+			"id": "I13",
+			"name": "Near target behind wall is approached around wall",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Fully separated target terminates within two seconds",
+					"passed": true
+				},
+				{
+					"description": "Unreachable failure never awards loot",
+					"passed": true
+				},
+				{
+					"description": "Failure has a terminal event for UI and telemetry",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 7,
+			"id": "I14",
+			"name": "Unreachable target fails without loot or endless walking",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Request follows relocated target instead of interacting at stale coordinates",
+					"passed": true
+				},
+				{
+					"description": "Final interaction uses target's latest position",
+					"passed": true
+				},
+				{
+					"description": "Replanning grants loot once",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 75,
+			"id": "I15",
+			"name": "Moving target is followed to its new location",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Windup event cannot affect a target now outside range",
+					"passed": true
+				},
+				{
+					"description": "Action re-approaches and commits normally at the new position",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 61,
+			"id": "I16",
+			"name": "Target leaving windup range cannot be hit remotely",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Deleting a target ends its pending navigation",
+					"passed": true
+				},
+				{
+					"description": "A removed target cannot leave a delayed reward",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 13,
+			"id": "I17",
+			"name": "Target deletion during approach terminates safely",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Target deletion during animation is safe and has no effect",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 18,
+			"id": "I18",
+			"name": "Target deletion during windup has no delayed reward",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Manual input actually moves actor",
+					"passed": true
+				},
+				{
+					"description": "Manual movement cancels buffered intent and automatic path",
+					"passed": true
+				},
+				{
+					"description": "Cancelled work does not finish in background",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 20,
+			"id": "I19",
+			"name": "Manual input interrupts buffered approach",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Viewport right-click reaches controller cancellation",
+					"passed": true
+				},
+				{
+					"description": "Actor remains stopped after cancellation",
+					"passed": true
+				},
+				{
+					"description": "Right-click does not cause a queued effect",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 14,
+			"id": "I20",
+			"name": "Right-click event cancels approach",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Picker chooses visually frontmost overlapping target",
+					"passed": true
+				},
+				{
+					"description": "Queued-for-deletion target cannot steal a pick",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 4,
+			"id": "I21",
+			"name": "Overlapping pick targets follow visual depth and deletion",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Navigation can route around test wall",
+					"passed": true
+				},
+				{
+					"description": "Player collision radius never clips the solid wall",
+					"passed": true
+				},
+				{
+					"description": "Actor reaches requested destination without stuck path",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 64,
+			"id": "I22",
+			"name": "Click movement respects clearance around a solid wall",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Dynamically sealed route stops instead of walking forever",
+					"passed": true
+				},
+				{
+					"description": "Actor never crosses newly closed solid wall",
+					"passed": true
+				},
+				{
+					"description": "Obsolete route cannot commit the target effect",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 10,
+			"id": "I23",
+			"name": "New blocking wall terminates an obsolete approach",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Animation enters windup before simulating a broken art adapter",
+					"passed": true
+				},
+				{
+					"description": "Missing animation events trigger a bounded terminal failure",
+					"passed": true
+				},
+				{
+					"description": "Watchdog never fabricates a commit to compensate for absent events",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 41,
+			"id": "I24",
+			"name": "Stopped animation is bounded by watchdog",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Completion listener can issue and finish a new chest command",
+					"passed": true
+				},
+				{
+					"description": "Old automatic chopping never resumes over the callback command",
+					"passed": true
+				},
+				{
+					"description": "One old strike and one replacement open commit",
+					"passed": true
+				},
+				{
+					"description": "Only actually completed work awards its own loot",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 25,
+			"id": "I25",
+			"name": "Completion callback command takes precedence over repeat",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Inventory callback runs inside a successful chest effect",
+					"passed": true
+				},
+				{
+					"description": "Returning from old execute_action leaves replacement uncommitted",
+					"passed": true
+				},
+				{
+					"description": "Replacement strike does not inherit the old chest's commit event",
+					"passed": true
+				},
+				{
+					"description": "Replacement commits once at its own animation event",
+					"passed": true
+				},
+				{
+					"description": "Both actions report their own effects without phantom damage or reward",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 15,
+			"id": "I26",
+			"name": "Inventory callback replacement keeps its own commit timing",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Reapproach notification listener can replace the old command",
+					"passed": true
+				},
+				{
+					"description": "Old reapproach path never restarts over the replacement command",
+					"passed": true
+				},
+				{
+					"description": "Only replacement target supplies a single reward",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 17,
+			"id": "I27",
+			"name": "Reapproach callback replacement is not overwritten",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Hidden salvage cannot be picked or commanded",
+					"passed": true
+				},
+				{
+					"description": "Initial scan out of range reveals and awards nothing",
+					"passed": true
+				},
+				{
+					"description": "Immediate repeat is blocked by the three-second cooldown",
+					"passed": true
+				},
+				{
+					"description": "Car body blocks a scan from the wrong side",
+					"passed": true
+				},
+				{
+					"description": "Unobstructed scan reveals the salvage and marks the wreck searched",
+					"passed": true
+				},
+				{
+					"description": "Revealed target becomes pickable without automatically awarding loot",
+					"passed": true
+				},
+				{
+					"description": "One pickup yields exactly two units",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 386,
+			"id": "M01",
+			"name": "Hidden salvage, scan range, line of sight and cooldown",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Visible car resolves to a clear interaction point",
+					"passed": true
+				},
+				{
+					"description": "Clicking the car walks to its rear and triggers the shared search skill",
+					"passed": true
+				},
+				{
+					"description": "Keyboard search shares cooldown and loot still needs a pickup",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 229,
+			"id": "M02",
+			"name": "Wreck body click approaches a separate working position and discovers salvage",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Missing metal rejects a direct and a queued repair",
+					"passed": true
+				},
+				{
+					"description": "Rejected repair charges nothing",
+					"passed": true
+				},
+				{
+					"description": "Cancelling before impact retains both stacks and the physical barrier",
+					"passed": true
+				},
+				{
+					"description": "External spending during windup prevents repair without partial payment",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 154,
+			"id": "M03",
+			"name": "Missing materials, pre-commit interruption and material loss keep the bridge closed",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Listener sees one coherent payment and a repaired fixture",
+					"passed": true
+				},
+				{
+					"description": "Callback cancellation still records one commit and unblocks physical traversal",
+					"passed": true
+				},
+				{
+					"description": "Repeat attempt cannot consume surplus resources",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 152,
+			"id": "M04",
+			"name": "Repair is atomic and survives cancellation and signal reentry",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Depot is physically unreachable and rejects a premature reward",
+					"passed": true
+				},
+				{
+					"description": "Duty desk rejects an empty handover",
+					"passed": true
+				},
+				{
+					"description": "Starting from the west, the actor reaches and chops the northern tree",
+					"passed": true
+				},
+				{
+					"description": "Car search and pickup also work after chopping first",
+					"passed": true
+				},
+				{
+					"description": "Repair pays both costs and removes the physical gate",
+					"passed": true
+				},
+				{
+					"description": "Only the repaired plank crossing opens",
+					"passed": true
+				},
+				{
+					"description": "Actor walks across the bridge to collect the kit",
+					"passed": true
+				},
+				{
+					"description": "Reopening the box cannot duplicate the kit",
+					"passed": true
+				},
+				{
+					"description": "Walk back through the actual map and deliver the kit to complete the HUD objective",
+					"passed": true
+				},
+				{
+					"description": "Repeated handover cannot complete the mission twice",
+					"passed": true
+				},
+				{
+					"description": "A fresh run resets all mission progress and the search cooldown",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 757,
+			"id": "M05",
+			"name": "Playable main scene completes a round trip by navigating to each target",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Buying a bar charges exactly seven vouchers",
+					"passed": true
+				},
+				{
+					"description": "Over-budget purchase is rejected without mutation",
+					"passed": true
+				},
+				{
+					"description": "Refunding an empty slot cannot generate credit",
+					"passed": true
+				},
+				{
+					"description": "Drink limit preserves the balance",
+					"passed": true
+				},
+				{
+					"description": "Sealed manifest carries the purchases into the night",
+					"passed": true
+				},
+				{
+					"description": "Only carried meals can be consumed and hunger stops at zero",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 0,
+			"id": "N01",
+			"name": "Budget, stock limits, refunds and manifest lock",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Two runs start with the same stock and balance",
+					"passed": true
+				},
+				{
+					"description": "Only the first use reveals the source and charges SAN",
+					"passed": true
+				},
+				{
+					"description": "Player chooses the near booth blind or the locked pump after the reveal",
+					"passed": true
+				},
+				{
+					"description": "A completed trip closes scouting and additional looting",
+					"passed": true
+				},
+				{
+					"description": "Near uncovered street and three-fuel distant pump produce different drying",
+					"passed": true
+				},
+				{
+					"description": "Report is terminal and the control run records zero uses",
+					"passed": true
+				},
+				{
+					"description": "Sense reveals information; identical loot is still present when skipped",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 0,
+			"id": "N02",
+			"name": "Same loadout, single-use sense changes the chosen route",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Same route and no sense isolate the effect of the blanket",
+					"passed": true
+				},
+				{
+					"description": "Without a bar the locked cabinet stays shut; the rain blanket keeps off part of the rain",
+					"passed": true
+				},
+				{
+					"description": "With no supplies the leaking shelter costs twenty health",
+					"passed": true
+				},
+				{
+					"description": "A new run starts in the shop with a fresh ability",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 0,
+			"id": "N03",
+			"name": "Rain cover, fuel and a wet shelter change dawn health",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Default launch presents procurement and isolates world input",
+					"passed": true
+				},
+				{
+					"description": "3D camera projects the logic-plane foot point to the same click coordinate",
+					"passed": true
+				},
+				{
+					"description": "Scene displays the clue, charges once and disables repeated use",
+					"passed": true
+				},
+				{
+					"description": "Clicking the visible facade resolves its exterior approach point",
+					"passed": true
+				},
+				{
+					"description": "Cancelling approach consumes neither the trip nor its reward",
+					"passed": true
+				},
+				{
+					"description": "Actor reaches the pump by normal movement and obtains the loadout reward",
+					"passed": true
+				},
+				{
+					"description": "Actual home interaction opens the completed settlement comparison",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 393,
+			"id": "N04",
+			"name": "Default scene, door picking, navigation, cancel and settlement",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Unprepared distant trip can exhaust health through all three pressures",
+					"passed": true
+				},
+				{
+					"description": "Eating after the round trip still reduces hunger before shelter settlement",
+					"passed": true
+				},
+				{
+					"description": "Food and a full cabinet protect health even after listening to the echo",
+					"passed": true
+				},
+				{
+					"description": "Dawn closes all four night actions",
+					"passed": true
+				},
+				{
+					"description": "A fresh run restores every vital",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 0,
+			"id": "N05",
+			"name": "Eating at home changes the dawn outcome for a risky trip",
+			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "Threshold equality and the nearest safe values give different health outcomes",
+					"passed": true
+				},
+				{
+					"description": "Threshold equality and the nearest safe values give different health outcomes",
+					"passed": true
+				},
+				{
+					"description": "All four values stay inside 0 to 100 across actions and settlement",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 0,
+			"id": "N06",
+			"name": "Survival limits and inclusive damage thresholds",
+			"passed": true
+		}
+	],
+	"engine": {
+		"build": "official",
+		"hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+		"hex": 263938,
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"status": "stable",
+		"string": "4.7.2-stable (official)",
+		"timestamp": 0
+	},
+	"execution": "Godot headless; real engine physics and AnimationPlayer; no GPU visual validation",
+	"failed": 0,
+	"generated_at_utc": "2026-11-22T07:43:56Z",
+	"not_covered": [
+		"Windows device performance",
+		"final pixel-art lighting",
+		"subjective input feel",
+		"GUI click consumption over real buttons"
+	],
+	"passed": 38,
+	"suite": "ZeroDay first-night, supply mission and interaction regression",
+	"total": 38
+}
