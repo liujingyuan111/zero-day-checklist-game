@@ -23,7 +23,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 44,
+			"elapsed_ms": 47,
 			"id": "I01",
 			"name": "Remote chest approach and one-time loot",
 			"passed": true
@@ -47,7 +47,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 33,
+			"elapsed_ms": 32,
 			"id": "I02",
 			"name": "Single request repeats chopping to completion",
 			"passed": true
@@ -123,7 +123,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 31,
+			"elapsed_ms": 63,
 			"id": "I06",
 			"name": "Cancellation after commit preserves effect and stops repeat",
 			"passed": true
@@ -139,7 +139,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 8,
+			"elapsed_ms": 31,
 			"id": "I07",
 			"name": "Duplicate commit token cannot duplicate effects",
 			"passed": true
@@ -155,7 +155,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 11,
+			"elapsed_ms": 48,
 			"id": "I08",
 			"name": "Stale token cannot commit a replacement action",
 			"passed": true
@@ -171,7 +171,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 14,
+			"elapsed_ms": 27,
 			"id": "I09",
 			"name": "Replacing an action cancels its pending effect",
 			"passed": true
@@ -191,7 +191,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 17,
+			"elapsed_ms": 19,
 			"id": "I10",
 			"name": "Cached action is rejected after equipment changes",
 			"passed": true
@@ -223,7 +223,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 20,
+			"elapsed_ms": 21,
 			"id": "I12",
 			"name": "Equipment changes during windup prevent damage",
 			"passed": true
@@ -251,7 +251,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 30,
+			"elapsed_ms": 31,
 			"id": "I13",
 			"name": "Near target behind wall is approached around wall",
 			"passed": true
@@ -271,7 +271,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 7,
+			"elapsed_ms": 6,
 			"id": "I14",
 			"name": "Unreachable target fails without loot or endless walking",
 			"passed": true
@@ -291,7 +291,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 75,
+			"elapsed_ms": 73,
 			"id": "I15",
 			"name": "Moving target is followed to its new location",
 			"passed": true
@@ -307,7 +307,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 61,
+			"elapsed_ms": 60,
 			"id": "I16",
 			"name": "Target leaving windup range cannot be hit remotely",
 			"passed": true
@@ -323,7 +323,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 13,
+			"elapsed_ms": 12,
 			"id": "I17",
 			"name": "Target deletion during approach terminates safely",
 			"passed": true
@@ -335,7 +335,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 18,
+			"elapsed_ms": 17,
 			"id": "I18",
 			"name": "Target deletion during windup has no delayed reward",
 			"passed": true
@@ -355,7 +355,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 20,
+			"elapsed_ms": 16,
 			"id": "I19",
 			"name": "Manual input interrupts buffered approach",
 			"passed": true
@@ -375,7 +375,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 14,
+			"elapsed_ms": 10,
 			"id": "I20",
 			"name": "Right-click event cancels approach",
 			"passed": true
@@ -391,7 +391,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 4,
+			"elapsed_ms": 5,
 			"id": "I21",
 			"name": "Overlapping pick targets follow visual depth and deletion",
 			"passed": true
@@ -411,7 +411,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 64,
+			"elapsed_ms": 51,
 			"id": "I22",
 			"name": "Click movement respects clearance around a solid wall",
 			"passed": true
@@ -431,7 +431,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 10,
+			"elapsed_ms": 9,
 			"id": "I23",
 			"name": "New blocking wall terminates an obsolete approach",
 			"passed": true
@@ -451,7 +451,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 41,
+			"elapsed_ms": 58,
 			"id": "I24",
 			"name": "Stopped animation is bounded by watchdog",
 			"passed": true
@@ -475,7 +475,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 25,
+			"elapsed_ms": 26,
 			"id": "I25",
 			"name": "Completion callback command takes precedence over repeat",
 			"passed": true
@@ -503,7 +503,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 15,
+			"elapsed_ms": 16,
 			"id": "I26",
 			"name": "Inventory callback replacement keeps its own commit timing",
 			"passed": true
@@ -523,7 +523,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 17,
+			"elapsed_ms": 16,
 			"id": "I27",
 			"name": "Reapproach callback replacement is not overwritten",
 			"passed": true
@@ -559,7 +559,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 386,
+			"elapsed_ms": 481,
 			"id": "M01",
 			"name": "Hidden salvage, scan range, line of sight and cooldown",
 			"passed": true
@@ -579,7 +579,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 229,
+			"elapsed_ms": 193,
 			"id": "M02",
 			"name": "Wreck body click approaches a separate working position and discovers salvage",
 			"passed": true
@@ -603,7 +603,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 154,
+			"elapsed_ms": 191,
 			"id": "M03",
 			"name": "Missing materials, pre-commit interruption and material loss keep the bridge closed",
 			"passed": true
@@ -623,7 +623,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 152,
+			"elapsed_ms": 216,
 			"id": "M04",
 			"name": "Repair is atomic and survives cancellation and signal reentry",
 			"passed": true
@@ -675,7 +675,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 757,
+			"elapsed_ms": 943,
 			"id": "M05",
 			"name": "Playable main scene completes a round trip by navigating to each target",
 			"passed": true
@@ -803,7 +803,7 @@
 					"passed": true
 				}
 			],
-			"elapsed_ms": 393,
+			"elapsed_ms": 509,
 			"id": "N04",
 			"name": "Default scene, door picking, navigation, cancel and settlement",
 			"passed": true
@@ -855,6 +855,106 @@
 			"id": "N06",
 			"name": "Survival limits and inclusive damage thresholds",
 			"passed": true
+		},
+		{
+			"assertions": [
+				{
+					"description": "The shop does not consume street camera controls",
+					"passed": true
+				},
+				{
+					"description": "Wheel down stops at the far limit",
+					"passed": true
+				},
+				{
+					"description": "E advances and wraps a real 90 degree camera pose (0)",
+					"passed": true
+				},
+				{
+					"description": "Viewport click on the rendered pump roof selects its exterior work point (0)",
+					"passed": true
+				},
+				{
+					"description": "Ground click and the camera agree on the navigation destination (0)",
+					"passed": true
+				},
+				{
+					"description": "D moves toward screen right for this view (0)",
+					"passed": true
+				},
+				{
+					"description": "E advances and wraps a real 90 degree camera pose (1)",
+					"passed": true
+				},
+				{
+					"description": "Viewport click on the rendered pump roof selects its exterior work point (1)",
+					"passed": true
+				},
+				{
+					"description": "Ground click and the camera agree on the navigation destination (1)",
+					"passed": true
+				},
+				{
+					"description": "D moves toward screen right for this view (1)",
+					"passed": true
+				},
+				{
+					"description": "E advances and wraps a real 90 degree camera pose (2)",
+					"passed": true
+				},
+				{
+					"description": "Viewport click on the rendered pump roof selects its exterior work point (2)",
+					"passed": true
+				},
+				{
+					"description": "Ground click and the camera agree on the navigation destination (2)",
+					"passed": true
+				},
+				{
+					"description": "D moves toward screen right for this view (2)",
+					"passed": true
+				},
+				{
+					"description": "E advances and wraps a real 90 degree camera pose (3)",
+					"passed": true
+				},
+				{
+					"description": "Viewport click on the rendered pump roof selects its exterior work point (3)",
+					"passed": true
+				},
+				{
+					"description": "Ground click and the camera agree on the navigation destination (3)",
+					"passed": true
+				},
+				{
+					"description": "D moves toward screen right for this view (3)",
+					"passed": true
+				},
+				{
+					"description": "Rotating does not spend SAN or use the player's sense",
+					"passed": true
+				},
+				{
+					"description": "Rapid opposite turns and wheel up settle at the requested angle and near limit",
+					"passed": true
+				},
+				{
+					"description": "The player stays at the orbit pivot at full zoom",
+					"passed": true
+				},
+				{
+					"description": "F triggers the existing sense action once",
+					"passed": true
+				},
+				{
+					"description": "Leaving the street restores the legacy scenes' canvas",
+					"passed": true
+				}
+			],
+			"elapsed_ms": 304,
+			"id": "N07",
+			"name": "Camera controls, zoom limits and input projection through the viewport",
+			"passed": true
 		}
 	],
 	"engine": {
@@ -870,14 +970,14 @@
 	},
 	"execution": "Godot headless; real engine physics and AnimationPlayer; no GPU visual validation",
 	"failed": 0,
-	"generated_at_utc": "2026-11-22T07:43:56Z",
+	"generated_at_utc": "2026-11-22T08:03:19Z",
 	"not_covered": [
 		"Windows device performance",
 		"final pixel-art lighting",
 		"subjective input feel",
 		"GUI click consumption over real buttons"
 	],
-	"passed": 38,
+	"passed": 39,
 	"suite": "ZeroDay first-night, supply mission and interaction regression",
-	"total": 38
+	"total": 39
 }

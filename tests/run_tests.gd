@@ -62,6 +62,7 @@ func _run() -> void:
 		{"id": "N04", "name": "Default scene, door picking, navigation, cancel and settlement", "run": _test_night_scene},
 		{"id": "N05", "name": "Eating at home changes the dawn outcome for a risky trip", "run": _test_night_meal},
 		{"id": "N06", "name": "Survival limits and inclusive damage thresholds", "run": _test_night_thresholds},
+		{"id": "N07", "name": "Camera controls, zoom limits and input projection through the viewport", "run": _test_camera_controls},
 	]
 	var failure_count := 0
 	for test_case in cases:
@@ -795,7 +796,7 @@ func _test_night_loadouts() -> void:
 	_check(NightRun.new().phase == NightRun.Phase.SHOP and not NightRun.new().used_sense, "A new run starts in the shop with a fresh ability")
 
 
-func _test_night_scene() -> void:
+func _open_first_night() -> void:
 	await _dispose_fixture()
 	_world = load(ProjectSettings.get_setting("application/run/main_scene")).instantiate()
 	root.add_child(_world)
@@ -804,6 +805,10 @@ func _test_night_scene() -> void:
 	_controller = _world.interaction
 	_picker = _controller.world_picker
 	await _frames(3)
+
+
+func _test_night_scene() -> void:
+	await _open_first_night()
 	_check(_world.shopping.visible and not _world.sites[&"pump"].interaction_enabled, "Default launch presents procurement and isolates world input")
 	var projected: Vector2 = _world.street.camera.unproject_position(NightStreet.ground(_actor.position))
 	_check(projected.distance_to(_actor.position) < 0.5, "3D camera projects the logic-plane foot point to the same click coordinate")
@@ -863,3 +868,73 @@ func _test_night_thresholds() -> void:
 	capped.search(&"pump")
 	capped.settle()
 	_check(capped.hunger == 100 and capped.wetness == 100 and capped.sanity == 0 and capped.health == 0, "All four values stay inside 0 to 100 across actions and settlement")
+
+func _press_camera_key(key: Key) -> void:
+	var event := InputEventKey.new()
+	event.physical_keycode = key
+	event.keycode = key
+	event.pressed = true
+	root.push_input(event, true)
+	event.pressed = false
+	root.push_input(event, true)
+
+
+func _mouse_click(button: MouseButton, at: Vector2) -> void:
+	var event := InputEventMouseButton.new()
+	event.button_index = button
+	event.position = at
+	event.pressed = true
+	root.push_input(event, true)
+	event.pressed = false
+	root.push_input(event, true)
+
+
+func _test_camera_controls() -> void:
+	await _open_first_night()
+	_press_camera_key(KEY_E)
+	_mouse_click(MOUSE_BUTTON_WHEEL_UP, Vector2(100, 350))
+	var street: NightStreet = _world.street
+	_check(street.view_index == 0 and street.zoom_index == 3, "The shop does not consume street camera controls")
+	_world._begin()
+	# Stand on open pavement so every roof remains within the viewport at wide zoom.
+	_actor.position = Vector2(640, 480)
+	for i in range(10):
+		_mouse_click(MOUSE_BUTTON_WHEEL_DOWN, Vector2(640, 360))
+	await _frames(40)
+	_check(is_equal_approx(street.zoom_factor, 0.55), "Wheel down stops at the far limit")
+	for i in range(4):
+		_press_camera_key(KEY_E)
+		await _frames(22)
+		var expected_view := (i + 1) % 4
+		_check(street.view_index == expected_view and is_equal_approx(street.yaw, (i + 1) * PI / 2.0), "E advances and wraps a real 90 degree camera pose (%d)" % i)
+		var pump: FirstNightSite = _world.sites[&"pump"]
+		var roof_pixel := street.camera.unproject_position(NightStreet.ground(NightStreet.BUILDINGS[&"pump"].get_center(), 2.6))
+		_mouse_click(MOUSE_BUTTON_LEFT, roof_pixel)
+		_check(_queue.current_intent != null and _queue.current_intent.target == pump, "Viewport click on the rendered pump roof selects its exterior work point (%d)" % i)
+		_mouse_click(MOUSE_BUTTON_RIGHT, roof_pixel)
+		var dest := _actor.position + Vector2(70, 18)
+		var projected := street.camera.unproject_position(NightStreet.ground(dest))
+		_mouse_click(MOUSE_BUTTON_LEFT, projected)
+		var path := _actor.path_preview()
+		_check(path.size() > 1 and path[-1].distance_to(dest) < 25, "Ground click and the camera agree on the navigation destination (%d)" % i)
+		_mouse_click(MOUSE_BUTTON_RIGHT, projected)
+		Input.action_press("move_right")
+		var start := _actor.position
+		await _frames(6)
+		Input.action_release("move_right")
+		var displacement := street.ground_transform.basis_xform(_actor.position - start)
+		_check(displacement.x > 1.0 and absf(displacement.y) < 0.1, "D moves toward screen right for this view (%d)" % i)
+		_actor.position = Vector2(640, 480)
+	_check(_world.run.sanity == 60 and not _world.run.used_sense, "Rotating does not spend SAN or use the player's sense")
+	_press_camera_key(KEY_Q)
+	_press_camera_key(KEY_Q)
+	_press_camera_key(KEY_E)
+	for i in range(12):
+		_mouse_click(MOUSE_BUTTON_WHEEL_UP, Vector2(600, 360))
+	await _frames(50)
+	_check(street.view_index == 3 and is_equal_approx(street.zoom_factor, 1.75), "Rapid opposite turns and wheel up settle at the requested angle and near limit")
+	_check(street.camera.unproject_position(NightStreet.ground(_actor.position)).distance_to(NightStreet.MAP_CENTER) < 0.5, "The player stays at the orbit pivot at full zoom")
+	_press_camera_key(KEY_F)
+	_check(_world.run.sanity == 40 and _world.run.used_sense, "F triggers the existing sense action once")
+	await _dispose_fixture()
+	_check(root.canvas_transform.is_equal_approx(Transform2D.IDENTITY), "Leaving the street restores the legacy scenes' canvas")

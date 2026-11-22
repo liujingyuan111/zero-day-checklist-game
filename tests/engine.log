@@ -38,4 +38,5 @@ PASS N03 Rain cover, fuel and a wet shelter change dawn health
 PASS N04 Default scene, door picking, navigation, cancel and settlement
 PASS N05 Eating at home changes the dawn outcome for a risky trip
 PASS N06 Survival limits and inclusive damage thresholds
-SUMMARY 38/38 passed; report: tests/latest_report.json
+PASS N07 Camera controls, zoom limits and input projection through the viewport
+SUMMARY 39/39 passed; report: tests/latest_report.json
