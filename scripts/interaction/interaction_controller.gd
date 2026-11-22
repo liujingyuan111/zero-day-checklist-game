@@ -30,7 +30,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		_update_hover()
 	elif event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			_handle_primary_click()
+			_handle_primary_click(actor.get_canvas_transform().affine_inverse() * event.position)
 			get_viewport().set_input_as_handled()
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
 			actor.action_queue.cancel_action("右键取消")
@@ -51,8 +51,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 
 
-func _handle_primary_click() -> void:
-	var mouse_position := actor.get_global_mouse_position()
+func _handle_primary_click(mouse_position: Vector2) -> void:
 	var target := world_picker.pick_target(mouse_position)
 	if is_instance_valid(target):
 		var action := ActionResolver.resolve(actor, target)
