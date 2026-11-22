@@ -50,7 +50,8 @@ func _physics_process(delta: float) -> void:
 		if action_queue.current_intent != null:
 			action_queue.cancel_action("手动移动，中断动作")
 		stop_path()
-		velocity = input_direction.normalized() * move_speed
+		input_direction = get_canvas_transform().affine_inverse().basis_xform(input_direction).normalized()
+		velocity = input_direction * move_speed
 		face_direction(input_direction)
 		move_and_slide()
 		visual_adapter.set_motion(velocity.length_squared() > 1.0)
